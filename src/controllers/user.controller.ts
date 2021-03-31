@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from './../models/user.model';
-import { generateJwt, passwordCompare, hashPassword, verifyToken } from "./../helpers/auth.service"
+import { generateJwt, passwordCompare, verifyToken } from "./../helpers/auth.service"
 import { Mail } from "./../helpers/mailer"
 import { clientUrl } from "./../config/client"
 import createError from "http-errors";
