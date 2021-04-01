@@ -17,6 +17,11 @@ app.use(cookieParser());
 
 app.use("/api", router);
 
+
+
+// app.use('/uploads', express.static('uploads'));
+app.use(express.static(__dirname));
+
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
       status: 'success',

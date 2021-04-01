@@ -67,7 +67,6 @@ import createError from "http-errors";
       try {
         const { email } = req.body;
         const user = await User.findOne({ email }).exec();
-        console.log("login user", user);
         
         const token = await generateJwt({user});
         res.cookie("jwt-token", token);

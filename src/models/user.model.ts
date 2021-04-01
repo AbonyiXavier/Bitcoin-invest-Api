@@ -1,6 +1,6 @@
 
 import mongoose, { Schema, Document } from 'mongoose';
-import {  hashPassword, passwordCompare } from "./../helpers/auth.service"
+import {  hashPassword } from "./../helpers/auth.service"
 import { db } from "./../Database/connect"
 
 // export enum UserRole {

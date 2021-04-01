@@ -118,3 +118,20 @@ export const validateLoginDetails = async (req: Request, res: Response, next: Ne
       .json({ success: false, error:error.details[0].message });
     }
   };
+
+  export const validateProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const schema = joi.object().keys({
+        image: joi.string(),
+        phoneNumber: joi.string(),
+      });
+      await schema.validateAsync(req.body)
+  
+      return next();
+      
+    } catch (error) {
+      return res
+      .status(400)
+      .json({ success: false, error:error.details[0].message });
+    }
+  };
