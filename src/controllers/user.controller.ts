@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { User } from './../models/user.model';
+import { Transaction } from './../models/transaction.model'
 import { generateJwt, passwordCompare, verifyToken } from "./../helpers/auth.service"
 import { Mail } from "./../helpers/mailer"
 import { clientUrl } from "./../config/client"
 import createError from "http-errors";
+import shortid from 'shortid';
 
 
     export const signup = async (req: Request, res: Response) => {
@@ -38,6 +40,15 @@ import createError from "http-errors";
                   name: userData.name,
                   email: userData.email,
               }
+              // keep user total amount to be zero
+              const totalBalance = 0;
+              const transaction_id = shortid.generate()
+
+              let txn = await new Transaction({
+                txn_id: transaction_id,
+                amount: totalBalance
+              })
+
               const token = await generateJwt(data._id);
               res.cookie("jwt-token", token);
               let link = `${clientUrl}confirm-account/${token}`;
@@ -52,7 +63,8 @@ import createError from "http-errors";
                    message: `Confirm your email on the link sent to ${email}`,
                    success: true, 
                    jwt: token,
-                   user: data
+                   user: data,
+                   txnDetail: txn
                  });
         } catch (error) {            
             return res.status(500).json({
