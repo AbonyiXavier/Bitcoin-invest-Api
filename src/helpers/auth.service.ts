@@ -1,5 +1,6 @@
 import jwt, { Secret } from "jsonwebtoken";
 import * as bcrypt from 'bcrypt';
+import { addMonths, format, formatDistance } from "date-fns";
 
 const secret: Secret = `${process.env.JWT_KEY}`;
 const refreshKey = `${process.env.REFRESH_TOKEN_KEY}`;
@@ -28,3 +29,11 @@ const refreshKey = `${process.env.REFRESH_TOKEN_KEY}`;
     return jwt.verify(token, secret)
 }
 
+export const calculateInvestmentMaturityDate = (date: string | number | Date, numberOfMonths: number) => {
+    let time = addMonths(new Date(date), numberOfMonths);
+    const dates = {
+      formatted: format(new Date(time), "EEEE do, MMMM yyyy"),
+      jsDate: format(new Date(time), "yyyy-MM-dd"),
+    };
+    return dates;
+  }

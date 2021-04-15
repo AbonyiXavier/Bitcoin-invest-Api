@@ -15,6 +15,8 @@ export interface IUser extends Document {
       confirm_password: string;
       emailConfirm: boolean;
       blocked: boolean | null;
+      wallet_address: string;
+      wallet_balance: number
       // role: UserRole;
     }
 
@@ -24,6 +26,8 @@ const UserSchema: Schema = new Schema({
       password: { type: String, required: true },
       emailConfirm: { type: Boolean, default: false },
       blocked: { type: Boolean, default: false },
+      wallet_address: { type: String, required: true },
+      wallet_balance: { type: Number, required: true, default: 0 },
       // role: {
       //   type: String,
       //   enum: Object.values(UserRole),

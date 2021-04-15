@@ -1,22 +1,64 @@
 import { Request, Response } from 'express';
-import { Transaction } from './../models/transaction.model'
-import shortid from 'shortid';
+import { Transaction } from './../models/transaction.model';
+import { Plan } from './../models/plan.model';
+import { User } from './../models/user.model';
 import createError from "http-errors";
 import { Mail } from "./../helpers/mailer"
 import { clientUrl } from "./../config/client"
+import { calculateInvestmentMaturityDate } from "./../helpers/auth.service"
+import { db } from "./../Database/connect";
 
 export const createTransaction = async (req: Request, res: Response) => {
-    try {                 
+  const session = await db.startSession();  
+  session.startTransaction();
+    try {      
+      const opts = { session };
+      
+    const endDate = calculateInvestmentMaturityDate(new Date(), 3); // date the rate will be due, like this one is for 3months
+    
+
+    const interestRate = await Plan.findOne({ _id: req.body.plan });
+    // console.log("interest_rate", interestRate);
+    
+
+    const monthlyRate = parseFloat(req.body.amount) * interestRate!.interest_rate / 100
+    console.log("month", monthlyRate);
+    let roundMonthlyRate = Math.round(monthlyRate)
+    
+    const user = await User.findOne({ _id: req.currentUser.payload.user._id  });
+
     const newTransaction = await new Transaction({
-        txn_id: shortid.generate(),
-        wallet_address: req.body.wallet_address,
         amount: req.body.amount,
         txn_type: 'deposit',
+        end_date: endDate.jsDate,
+        plan: req.body.plan,
+        monthly_rate: roundMonthlyRate,
         owner: req.currentUser.payload.user._id 
-    })    
-    await newTransaction.save()
-    return res.send(newTransaction) 
+    })
+   
+
+     await newTransaction.save(opts)
+
+     await session.commitTransaction();
+     session.endSession();
+
+    const options = {
+      mail: user!.email,
+      subject: "Welcome to Bitcoin Store!, Deposit to account",
+      email: "../services/email/templates/deposit.html",
+      variables: { name: user!.name, },
+    };
+    Mail(options);
+    return res.json({
+         message: `Bitcoin account sent to ${user!.email}`,
+         success: true, 
+         newTransaction
+       });
+
+
     } catch (error) {
+     await session.abortTransaction();    
+      session.endSession();
       return res.status(500).json({
         message: error.message,
         error: 'There was an error. Please try again.',
@@ -85,9 +127,47 @@ export const createTransaction = async (req: Request, res: Response) => {
 
 export const getTransaction = async (req: Request, res: Response) => {
     try {        
-      const txn = await Transaction.find({ }).populate([{"path":"owner", "model":"User",  "select": "name email _id emailConfirm blocked"}]).exec()        
+      const txn = await Transaction.find({ }).populate([{"path":"owner", "model":"User",  "select": "name email _id emailConfirm blocked"}]).populate([{"path":"plan", "model":"Plan",  "select": "name interest_rate"}]).exec()        
       return res.send(txn)        
     } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+        error: 'There was an error. Please try again.',
+        success: false
+      });
+    }
+  }
+
+ 
+  export const checkInvestmentAndClose = async(req: Request, res: Response) => {
+    const session = await db.startSession();  
+    session.startTransaction();
+    try {
+
+      const getValue = await Transaction.find({ status: 'active', approved: true,
+      end_date: {
+        $gte: new Date(),
+      }
+     }).exec()
+
+
+     // Update user wallet amount
+     getValue.forEach(async (item) => {
+      const user = await User.findOne({ _id: item.owner  });
+       
+       await User.findOneAndUpdate({
+        _id: item.owner
+       },{$inc: { wallet_balance: Number(user!.wallet_balance) + Number(item.monthly_rate)}}, {
+        upsert: true,
+        session
+      })       
+     })
+
+     await session.commitTransaction();
+
+    } catch (error) {
+      await session.abortTransaction();    
+      session.endSession();
       return res.status(500).json({
         message: error.message,
         error: 'There was an error. Please try again.',

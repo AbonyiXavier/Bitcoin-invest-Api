@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
 import { User } from './../models/user.model';
-import { Transaction } from './../models/transaction.model'
 import { generateJwt, passwordCompare, verifyToken } from "./../helpers/auth.service"
 import { Mail } from "./../helpers/mailer"
 import { clientUrl } from "./../config/client"
 import createError from "http-errors";
-import shortid from 'shortid';
+
 
 
     export const signup = async (req: Request, res: Response) => {
         try {
-            const { name, email, password, confirm_password } = req.body;
+            const { name, email, password, confirm_password, wallet_address } = req.body;
             const existingUser = await User.findOne({ email }).exec();
             if (existingUser) {
               return res
@@ -24,7 +23,8 @@ import shortid from 'shortid';
                 name,
                 email,
                 password,
-                confirm_password
+                confirm_password,
+                wallet_address
               });
               if (confirm_password !== password) {
                 return res
@@ -39,15 +39,8 @@ import shortid from 'shortid';
                   _id: userData._id,
                   name: userData.name,
                   email: userData.email,
+                  bitcoin_wallet: userData.wallet_address
               }
-              // keep user total amount to be zero
-              const totalBalance = 0;
-              const transaction_id = shortid.generate()
-
-              let txn = await new Transaction({
-                txn_id: transaction_id,
-                amount: totalBalance
-              })
 
               const token = await generateJwt(data._id);
               res.cookie("jwt-token", token);
@@ -64,7 +57,6 @@ import shortid from 'shortid';
                    success: true, 
                    jwt: token,
                    user: data,
-                   txnDetail: txn
                  });
         } catch (error) {            
             return res.status(500).json({

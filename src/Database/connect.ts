@@ -14,4 +14,5 @@ const url = `${process.env.MONGO_URI}`;
 export const db = mongoose.createConnection(url, MONGO_CONFIG);
 
 db.then(() => console.log('Database connected'))
-  .catch((err: Error) => console.error(JSON.stringify(err)));
+  .catch((err: Error) => console.log("err", err));
+  

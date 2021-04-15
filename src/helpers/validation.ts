@@ -15,7 +15,8 @@ export const validateAuthDetails = async (req: Request, res: Response, next: Nex
         .email()
         .required(),
       password: joi.string().min(6).required(),
-      confirm_password: joi.string().min(6).required()
+      confirm_password: joi.string().min(6).required(),
+      wallet_address: joi.string().required()
     });
     const val = await schema.validateAsync(req.body)
     return next();
