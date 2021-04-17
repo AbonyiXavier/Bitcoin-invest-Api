@@ -4,8 +4,8 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan';
 import "dotenv/config";
 import router from './routes';
-// import { CronJob } from 'cron';
-
+import { checkInvestmentAndClose } from './controllers/transaction.controller'
+import { CronJob } from 'cron';
 
 require("./Database/connect");
 
@@ -19,11 +19,13 @@ app.use(cookieParser());
 
 app.use("/api", router);
 
+const res:Response = Response
+const req:Request = Request
 
-// const job = new CronJob('* * * * * *', function() {
-//   console.log('You will see this message every second');
-// }, null, true, 'America/Los_Angeles');
-// job.start()
+const job = new CronJob('00 00 01 * * 0-6', async () => {
+  checkInvestmentAndClose(req, res)
+}, null, true, 'Europe/Brussels');
+job.start()
 
 // app.use('/uploads', express.static('uploads'));
 app.use(express.static(__dirname));

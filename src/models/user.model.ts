@@ -1,6 +1,7 @@
 
 import mongoose, { Schema, Document } from 'mongoose';
 import {  hashPassword } from "./../helpers/auth.service"
+import { IRole } from "./../models/role.model";
 import { db } from "./../Database/connect"
 
 // export enum UserRole {
@@ -17,7 +18,7 @@ export interface IUser extends Document {
       blocked: boolean | null;
       wallet_address: string;
       wallet_balance: number
-      // role: UserRole;
+      role: IRole['_id'];
     }
 
 const UserSchema: Schema = new Schema({
@@ -28,12 +29,7 @@ const UserSchema: Schema = new Schema({
       blocked: { type: Boolean, default: false },
       wallet_address: { type: String, required: true },
       wallet_balance: { type: Number, required: true, default: 0 },
-      // role: {
-      //   type: String,
-      //   enum: Object.values(UserRole),
-      //   default: UserRole.User,
-      //   required: true,
-      // },
+      role: { type: Schema.Types.ObjectId }
     },{ timestamps: true });
 
     // Hash Password To DB

@@ -3,6 +3,7 @@ import joi from 'joi';
 import { User } from '../models/user.model';
 import { passwordCompare, generateJwt } from "./../helpers/auth.service"
 import createError from "http-errors";
+import permissions from './../helpers/permission'
 
 
 
@@ -125,6 +126,32 @@ export const validateLoginDetails = async (req: Request, res: Response, next: Ne
       const schema = joi.object().keys({
         image: joi.string(),
         phoneNumber: joi.string(),
+      });
+      await schema.validateAsync(req.body)
+  
+      return next();
+      
+    } catch (error) {
+      return res
+      .status(400)
+      .json({ success: false, error:error.details[0].message });
+    }
+  };
+  export const validatePermission = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const schema = joi.object().keys({
+        name: joi.string().trim().lowercase().required(),
+        description: joi.string().required(),
+       permissions: joi.array()
+        .items(joi.string().valid(...permissions))
+        .required()
+        .unique()
+        .messages({
+        "array.length": `Permissions can not be more than ${permissions.length}`,
+        "array.min": "Please permission should contain atleast 1 permission",
+        "any.required": "Sorry, permission is required",
+      }),
+
       });
       await schema.validateAsync(req.body)
   

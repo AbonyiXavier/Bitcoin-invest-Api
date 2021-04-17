@@ -1,14 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import permissions from './../helpers/permission'
+import { IUser } from './user.model';
 import { db } from "./../Database/connect"
 
 
 export interface IRole extends Document {
-    id: string;
     name: string;
-    permission: string;
+    permission: string[];
     description: string;
-    ModifiedBy: ['_id'];
+    ModifiedBy: IUser['_id'];
 }
 
 const RoleSchema = new Schema({

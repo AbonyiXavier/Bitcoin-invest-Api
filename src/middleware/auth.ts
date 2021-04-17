@@ -1,6 +1,7 @@
 import { verifyToken } from "../helpers/auth.service";
 import { NextFunction, Request, Response } from 'express';
 import joi from 'joi';
+import { User } from '../models/user.model'
 
 
 export const validateUserToken = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,10 +20,16 @@ export const validateUserToken = async (req: Request, res: Response, next: NextF
    await schema.validateAsync(req.headers)
   try {
     const [, token, ] = authorization!.split('Bearer ');
-    const  user = await verifyToken(token);
+    const  user: any = await verifyToken(token);    
     
-    req.currentUser = user
-    // console.log("test",  req.currentUser);
+    // Get user details from the token
+    const newUserDetails = await User.findOne({ _id: user.payload.user._id })
+    .populate([{"path":"role", "model":"Roles",  "select": "name description permission"}])
+    .exec()
+    
+    req.currentUser = newUserDetails
+    // req.currentUser = user
+    console.log("test",  req.currentUser);
     
     return next();
   } catch (error) {

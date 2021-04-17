@@ -7,6 +7,7 @@ import { Mail } from "./../helpers/mailer"
 import { clientUrl } from "./../config/client"
 import { calculateInvestmentMaturityDate } from "./../helpers/auth.service"
 import { db } from "./../Database/connect";
+import { isToday, formatISO } from 'date-fns'
 
 export const createTransaction = async (req: Request, res: Response) => {
   const session = await db.startSession();  
@@ -42,15 +43,15 @@ export const createTransaction = async (req: Request, res: Response) => {
      await session.commitTransaction();
      session.endSession();
 
-    const options = {
-      mail: user!.email,
-      subject: "Welcome to Bitcoin Store!, Deposit to account",
-      email: "../services/email/templates/deposit.html",
-      variables: { name: user!.name, },
-    };
-    Mail(options);
+    // const options = {
+    //   mail: user!.email,
+    //   subject: "Welcome to Bitcoin Store!, Deposit to account",
+    //   email: "../services/email/templates/deposit.html",
+    //   variables: { name: user!.name, },
+    // };
+    // Mail(options);
     return res.json({
-         message: `Bitcoin account sent to ${user!.email}`,
+        //  message: `Bitcoin account sent to ${user!.email}`,
          success: true, 
          newTransaction
        });
@@ -143,24 +144,38 @@ export const getTransaction = async (req: Request, res: Response) => {
     const session = await db.startSession();  
     session.startTransaction();
     try {
+      const result: Date = formatISO(new Date())
 
       const getValue = await Transaction.find({ status: 'active', approved: true,
       end_date: {
-        $gte: new Date(),
+        $gte: result,
       }
      }).exec()
+    console.log("value", getValue);
 
 
      // Update user wallet amount
      getValue.forEach(async (item) => {
+       console.log(item._id);
+       
       const user = await User.findOne({ _id: item.owner  });
        
-       await User.findOneAndUpdate({
+     await User.findOneAndUpdate({
         _id: item.owner
        },{$inc: { wallet_balance: Number(user!.wallet_balance) + Number(item.monthly_rate)}}, {
-        upsert: true,
         session
-      })       
+      })    
+      const today = isToday(new Date(item.end_date))
+      console.log("today", today);
+      
+      if (today) {
+        // change status to closed 
+      await Transaction.findOneAndUpdate({
+        _id: item._id
+       }, {$set: {status: 'closed'}},  {
+       session
+      })
+      }
      })
 
      await session.commitTransaction();
@@ -175,3 +190,4 @@ export const getTransaction = async (req: Request, res: Response) => {
       });
     }
   }
+

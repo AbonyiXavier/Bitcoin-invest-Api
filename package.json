@@ -8,7 +8,8 @@
     "start": "tsc && node ./build/server.js",
     "dev": "nodemon ./src/server.ts",
     "start:dev": "nodemon --exec ts-node -T src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "ts-node -T src/seeders/seed.ts"
   },
   "author": "AbonyiXavier <francisabonyi@gmail.com>",
   "license": "ISC",
