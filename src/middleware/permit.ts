@@ -5,7 +5,6 @@ export const permit = (permit: any) => {
   try {
     return async function (req: Request, res: Response, next: NextFunction) {
       const permissions = req.currentUser.role.permissions; //Get the permission of user from decoded value
-      console.log('permissions', permissions);
       const hasPermit = _.includes(permissions, permit);
       if (!hasPermit) {
         return res.status(403).send('Unauthorized access!');

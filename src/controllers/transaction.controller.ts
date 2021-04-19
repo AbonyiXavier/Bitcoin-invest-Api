@@ -13,8 +13,6 @@ export const createTransaction = async (req: Request, res: Response) => {
   const session = await db.startSession();
   session.startTransaction();
   try {
-    console.log(req.currentUser._id);
-
     const opts = { session };
 
     const endDate = calculateInvestmentMaturityDate(new Date(), 3); // date the rate will be due, like this one is for 3months
@@ -35,6 +33,7 @@ export const createTransaction = async (req: Request, res: Response) => {
       end_date: endDate.jsDate,
       plan: req.body.plan,
       monthly_rate: roundMonthlyRate,
+      status: 'active',
       owner: req.currentUser._id,
     });
 

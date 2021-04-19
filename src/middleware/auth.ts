@@ -28,7 +28,7 @@ export const validateUserToken = async (
   try {
     const [, token] = authorization!.split('Bearer ');
     const user: any = await verifyToken(token);
-    console.log('user', user);
+    // console.log('user', user);
 
     // Get user details from the token
     const newUserDetails = await User.findOne({ _id: user.payload.user._id })
@@ -43,7 +43,7 @@ export const validateUserToken = async (
 
     req.currentUser = newUserDetails;
     // req.currentUser = user
-    console.log('test', req.currentUser);
+    // console.log('test', req.currentUser);
 
     return next();
   } catch (error) {
