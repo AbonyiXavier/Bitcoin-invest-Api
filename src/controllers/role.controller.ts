@@ -5,7 +5,7 @@ import permissions from './../helpers/permission';
 
 export const createRole = async (req: Request, res: Response) => {
   try {
-    const { name, description, permission } = req.body;
+    const { name, description, permissions } = req.body;
     const existingRole = await Roles.findOne({ name }).exec();
     if (existingRole) {
       return res.status(401).json({
@@ -16,13 +16,15 @@ export const createRole = async (req: Request, res: Response) => {
     const newRole = await new Roles({
       name,
       description,
-      permission,
-      ModifiedBy: req.currentUser.payload.user._id,
+      permissions,
+      ModifiedBy: req.currentUser._id,
     });
 
     await newRole.save();
     return res.send(newRole);
   } catch (error) {
+    console.log('error', error);
+
     return res.status(500).json({
       message: error.message,
       error: 'There was an error. Please try again.',
@@ -70,12 +72,37 @@ export const editRole = async (req: Request, res: Response) => {
       return res.status(400).send('Sorry You cannot edit this role');
     }
     if (req.body.name) role.name = req.body.name;
-    if (req.body.permission) role.permission = req.body.permission;
+    if (req.body.permission) role.permissions = req.body.permission;
     if (req.body.description) role.description = req.body.description;
     role.ModifiedBy = req.currentUser._id;
     await Roles.findByIdAndUpdate({ _id: role.id }, role);
     return res.status(200).send('Updated succesfully!!');
   } catch (error) {
-    console.log('error', error);
+    return res.status(500).json({
+      message: error.message,
+      error: 'There was an error. Please try again.',
+      success: false,
+    });
+  }
+};
+
+export const deleteRole = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const role = await Roles.findOne({ _id: id });
+    if (!role) {
+      throw new createError.BadRequest(`role doesn't exist`);
+    }
+    if (role.name == 'administrator' || role.name == 'user') {
+      return res.status(400).send('Sorry You cannot delete this role');
+    }
+    await Roles.deleteOne({ _id: id });
+    return res.status(200).send(`Role Deleted!`);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      error: 'There was an error. Please try again.',
+      success: false,
+    });
   }
 };

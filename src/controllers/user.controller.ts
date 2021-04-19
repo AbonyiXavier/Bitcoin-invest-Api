@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from './../models/user.model';
+import { Roles } from './../models/role.model';
 import {
   generateJwt,
   passwordCompare,
@@ -19,6 +20,9 @@ export const signup = async (req: Request, res: Response) => {
       wallet_address,
     } = req.body;
     const existingUser = await User.findOne({ email }).exec();
+    // Get the user role from Db to default sign person as role "user"
+    const role = await Roles.findOne({ name: 'user' }).exec();
+
     if (existingUser) {
       return res.status(401).json({
         error: 'account with that email already exists.',
@@ -31,6 +35,7 @@ export const signup = async (req: Request, res: Response) => {
       password,
       confirm_password,
       wallet_address,
+      role: role!._id,
     });
     if (confirm_password !== password) {
       return res.status(400).json({
@@ -39,11 +44,13 @@ export const signup = async (req: Request, res: Response) => {
       });
     }
     let userData = await user.save();
+
     let data = {
       _id: userData._id,
       name: userData.name,
       email: userData.email,
       bitcoin_wallet: userData.wallet_address,
+      role: userData.role,
     };
 
     const token = await generateJwt(data._id);
@@ -258,8 +265,15 @@ export const blockUser = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const user = await User.find({}).exec();
-    // const user = await User.findOne({_id: req.currentUser.payload.user._id }).exec()
+    const user = await User.find({})
+      .populate([
+        {
+          path: 'role',
+          model: 'Roles',
+          select: 'name description permissions',
+        },
+      ])
+      .exec();
     return res.send(user);
   } catch (error) {
     return res.status(500).json({
