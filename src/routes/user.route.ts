@@ -24,7 +24,7 @@ router.post('/changepassword/:id', validateChangePassword, changePassword);
 router.post('/forgetpassword', validateEmail, forgetPassword);
 router.post('/confirm/:token/:email', confirmEmail);
 router.post('/users/:id', blockUser);
-router.get('/users', getUsers);
-// router.get('/users', validateUserToken, permit('role.view'), getUsers);
+// router.get('/users', getUsers);
+router.get('/users', validateUserToken, permit('role.view'), getUsers);
 
 export default router;
