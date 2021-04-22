@@ -8,10 +8,11 @@
       "strict": true,
       "typeRoots": ["./node_modules/@types", "./src/@types"],
       // "typeRoots": ["./node_modules/@types", "src/definition"],
+      "skipLibCheck": true
     },
     "include": [
       "src/**/*"
-, "md-seed-config.js"    ],
+     ],
     "exclude": [
       "node_modules"
     ]
