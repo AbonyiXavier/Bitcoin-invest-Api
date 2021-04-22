@@ -1,52 +1,61 @@
-import mongoose from "mongoose";
-import { Roles } from './../models/role.model';
-import { db } from "./../Database/connect"
+import mongoose from 'mongoose';
+import { Roles } from '../models/role.model';
+
+const url = `${process.env.MONGO_URI}`;
 
 // connection to mongodb
+
 const connect = () => {
-    /** connection mongodb */
-    db
-};
+  /** connection mongodb */
+  mongoose
+    .connect(
+      'mongodb+srv://bitcoin:btcoinpass@bitcoin-db.hxqzi.mongodb.net/bitcoin-db?retryWrites=true&w=majority',
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+      }
+    )
+    .then(() => {
+      console.log('mongodb connected...');
+    })
+    .catch((err) => console.log(err.message));
 
+  mongoose.connection.on('connected', () => {
+    console.log('Mongoose connected to db');
+  });
+};
 // Drop existing roles if any
-const roleModelSeed = () => Roles.deleteMany({});
+// const roleModelSeed = () => Roles.deleteMany({});
 
+const data = [
+  {
+    name: 'user',
+    description: 'User role',
+    ModifiedBy: new Date(),
+    permissions: ['user.view', 'user.manage'],
+  },
+];
 const Seeders = {
-    async seedRoleModel() {
-        try {
-            // make a bunch of role
-            const role = [];
-            for (let i = 0; i < 1; i += 1) {
-                const name: string = "Admin";
-                const description: string = "Able to do stuff";
-                const ModifiedBy: string = "6078303713204c27b45bb98a";
-                const permission: string[] = ["transaction.manage", 'transaction.view' ]
-                const newRole = {
-                    name,
-                    description,
-                    ModifiedBy,
-                    permission
-                };
-                role.push(newRole);
-
-            }
-
-            await Roles.insertMany(role);
-        } catch (error) {
-            console.log("error out", error);
-        }
-    },
+  async seedRoleModel() {
+    try {
+      await Roles.insertMany(data);
+    } catch (error) {
+      console.log('error out', error);
+    }
+  },
 };
 
-const migration = async() => {
-    try {
-        await connect();
-        await roleModelSeed();
-        await Seeders.seedRoleModel();
-        console.log("db migration successful");
-    } catch (error) {
-        console.log("error me", error);
-    }
+const migration = async () => {
+  try {
+    await connect();
+    // await roleModelSeed();
+    await Seeders.seedRoleModel();
+    console.log('db migration successful');
+  } catch (error) {
+    console.log('error me', error);
+  }
 };
 
 migration();

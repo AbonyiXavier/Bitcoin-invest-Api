@@ -72,7 +72,7 @@ export const editRole = async (req: Request, res: Response) => {
       return res.status(400).send('Sorry You cannot edit this role');
     }
     if (req.body.name) role.name = req.body.name;
-    if (req.body.permission) role.permissions = req.body.permission;
+    if (req.body.permissions) role.permissions = req.body.permission;
     if (req.body.description) role.description = req.body.description;
     role.ModifiedBy = req.currentUser._id;
     await Roles.findByIdAndUpdate({ _id: role.id }, role);
