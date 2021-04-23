@@ -1,3 +1,52 @@
+// const path = require('path');
+// const { Seeder } = require('mongo-seeding');
+
+// const url = `${process.env.MONGO_URI}`;
+// const config = {
+//   database: {
+//     database: url,
+//   },
+//   dropDatabase: true,
+// };
+// const collections = [
+//   {
+//     name: 'Administrator',
+//     permissions: ['role.view'],
+//     description: 'Admin privillage',
+//   },
+//   {
+//     name: 'Super Admin',
+//     permissions: ['role.view', 'role.manage'],
+//     description: 'Sper Admin privillage',
+//   },
+// ];
+
+// const seeder = new Seeder(config);
+// const collections = seeder.readCollectionsFromPath(path.join(__dirname, '../data-import/role.ts'), {
+//   transformers: [Seeder.Transformers.replaceDocumentIdWithUnderscoreId],
+// });
+// console.log('col', collections);
+
+// seeder
+//   .import(collections)
+//   .then(() => {
+//     console.log('Success');
+//   })
+//   .catch((err: any) => {
+//     console.log('Error', err);
+//   });
+
+// const migration = async () => {
+//   try {
+//     await seeder.import(collections);
+//   } catch (err) {
+//     // Handle errors
+//     console.log('Error', err);
+//   }
+// };
+
+// migration();
+
 // import mongoose from 'mongoose';
 // import { Roles } from '../models/role.model';
 
@@ -8,14 +57,12 @@
 // const connect = () => {
 //   /** connection mongodb */
 //   mongoose
-//     .connect(
-//       {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//         useCreateIndex: true,
-//         useFindAndModify: false,
-//       }
-//     )
+//     .connect(url, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//       useCreateIndex: true,
+//       useFindAndModify: false,
+//     })
 //     .then(() => {
 //       console.log('mongodb connected...');
 //     })
@@ -32,7 +79,7 @@
 //   {
 //     name: 'user',
 //     description: 'User role',
-//     ModifiedBy: new Date(),
+//     ModifiedBy: '608215ba18844514f000dd7f',
 //     permissions: ['user.view', 'user.manage'],
 //   },
 // ];
