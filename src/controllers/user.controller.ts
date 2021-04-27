@@ -52,7 +52,7 @@ export const signup = async (req: Request, res: Response) => {
     };
 
     const token = await generateJwt(data._id);
-    res.cookie('jwt-token', token, { sameSite: 'none', secure: false });
+    res.cookie('jwt-token', token, { sameSite: 'none', httpOnly: true });
     // let link = `${clientUrl}confirm-account/${token}`;
     // const options = {
     //   mail: email,
