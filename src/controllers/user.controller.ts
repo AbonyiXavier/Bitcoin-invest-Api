@@ -53,14 +53,14 @@ export const signup = async (req: Request, res: Response) => {
 
     const token = await generateJwt(data._id);
     res.cookie('jwt-token', token, { sameSite: 'none', secure: true });
-    let link = `${clientUrl}confirm-account/${token}`;
-    const options = {
-      mail: email,
-      subject: 'Welcome to Bitcoin Store!, confirm your email',
-      email: '../services/email/templates/welcome.html',
-      variables: { name: name, link: link },
-    };
-    await Mail(options);
+    // let link = `${clientUrl}confirm-account/${token}`;
+    // const options = {
+    //   mail: email,
+    //   subject: 'Welcome to Bitcoin Store!, confirm your email',
+    //   email: '../services/email/templates/welcome.html',
+    //   variables: { name: name, link: link },
+    // };
+    // await Mail(options);
     return res.json({
       message: `Confirm your email on the link sent to ${email}`,
       success: true,
