@@ -22,8 +22,7 @@ export const validateAuthDetails = async (req: Request, res: Response, next: Nex
           'string.pattern.base': 'referal username must contain only from a-z or A-Z or 0-9.',
           'string.empty': 'Sorry, referal username cannot be an empty field',
           'string.min': 'referal username should have a minimum length of 5',
-        })
-        .required(),
+        }),
     });
     const val = await schema.validateAsync(req.body);
     return next();
