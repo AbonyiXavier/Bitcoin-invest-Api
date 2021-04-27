@@ -1,5 +1,2 @@
-
-const clientUrl = `http://`; //Frontend Link
-export {
-    clientUrl
-}
+const clientUrl = `http://bitcoinstore/`; //Frontend Link
+export { clientUrl };

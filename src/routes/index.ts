@@ -5,6 +5,7 @@ import transactionRoute from './transaction.route';
 import planRoute from './plan.route';
 import roleRoute from './role.route';
 import withdrawRoute from './withdraw.route';
+import referalRoute from './referal.route';
 
 router.use('/v1', userRoute);
 router.use('/v1', profileRoute);
@@ -12,5 +13,6 @@ router.use('/v1', transactionRoute);
 router.use('/v1', planRoute);
 router.use('/v1', roleRoute);
 router.use('/v1', withdrawRoute);
+router.use('/v1', referalRoute);
 
 export default router;

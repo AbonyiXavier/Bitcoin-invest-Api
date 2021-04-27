@@ -18,10 +18,25 @@ export const createTransaction = async (req: Request, res: Response) => {
     const endDate = calculateInvestmentMaturityDate(new Date(), 3); // date the rate will be due, like this one is for 3months
 
     const interestRate = await Plan.findOne({ _id: req.body.plan });
+
+    // const firstInvestment = await Transaction.find({ owner: req.currentUser._id }); // []
+
+    // const refferedAccountToCredit = req.currentUser.referredBy;
+    // if (firstInvestment.length === 0 && refferedAccountToCredit !== null) {
+    //   const user = await User.findOne({ userName: refferedAccountToCredit });
+    //   await User.findOneAndUpdate(
+    //     { userName: refferedAccountToCredit },
+    //     {
+    //       $inc: {
+    //         wallet_balance: Number(user!.wallet_balance) + Number(500),
+    //       },
+    //     },
+    //     opts
+    //   );
+    // }
     // console.log("interest_rate", interestRate);
 
-    const monthlyRate =
-      (parseFloat(req.body.amount) * interestRate!.interest_rate) / 100;
+    const monthlyRate = (parseFloat(req.body.amount) * interestRate!.interest_rate) / 100;
     console.log('month', monthlyRate);
     let roundMonthlyRate = Math.round(monthlyRate);
 
@@ -66,17 +81,22 @@ export const createTransaction = async (req: Request, res: Response) => {
 };
 
 export const approveTransaction = async (req: Request, res: Response) => {
+  const session = await db.startSession();
+  session.startTransaction();
   try {
+    const opts = { session };
+
     const { id } = req.params;
     const trnx = await Transaction.findOne({ _id: id })
       .populate([
         {
           path: 'owner',
           model: 'User',
-          select: 'name email _id emailConfirm blocked',
+          select: 'name email _id referredBy emailConfirm blocked',
         },
       ])
       .exec();
+
     if (!trnx) {
       throw new createError.BadRequest(`Transaction doesn't exist`);
     }
@@ -84,18 +104,35 @@ export const approveTransaction = async (req: Request, res: Response) => {
       throw new createError.BadRequest(`Sorry Transaction is already approved`);
     }
     if (!trnx.approved && trnx.approved !== null) {
-      throw new createError.BadRequest(
-        `Sorry Transaction is already blocked/unapproved`
-      );
+      throw new createError.BadRequest(`Sorry Transaction is already blocked/unapproved`);
     }
     let approve = !trnx.approved;
+
+    const firstInvestment = await Transaction.find({ owner: trnx.owner._id }); // []
+
+    const refferedAccountToCredit = trnx.owner.referredBy;
+    if (firstInvestment.length === 1 && refferedAccountToCredit !== null) {
+      const user = await User.findOne({ userName: refferedAccountToCredit });
+      await User.findOneAndUpdate(
+        { userName: refferedAccountToCredit },
+        {
+          $inc: {
+            wallet_balance: Number(user!.wallet_balance) + Number(500),
+          },
+        },
+        opts
+      );
+    }
+
+    await session.commitTransaction();
+    session.endSession();
 
     const trnxSaved = await Transaction.findOneAndUpdate(
       {
         _id: id,
       },
       {
-        $set: { approved: approve, owner: req.currentUser._id },
+        $set: { approved: approve },
       },
       {
         new: true,
@@ -127,6 +164,8 @@ export const approveTransaction = async (req: Request, res: Response) => {
     }
     return res.status(200).send('Transaction was approved!');
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     return res.status(500).json({
       message: error.message,
       error: 'There was an error. Please try again.',
@@ -182,8 +221,7 @@ export const checkInvestmentAndClose = async () => {
         },
         {
           $inc: {
-            wallet_balance:
-              Number(user!.wallet_balance) + Number(item.monthly_rate),
+            wallet_balance: Number(user!.wallet_balance) + Number(item.monthly_rate),
           },
         },
         {

@@ -6,6 +6,7 @@ import 'dotenv/config';
 import router from './routes';
 import { checkInvestmentAndClose } from './controllers/transaction.controller';
 import { CronJob } from 'cron';
+const { shouldSendSameSiteNone } = require('should-send-same-site-none');
 
 require('./Database/connect');
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(shouldSendSameSiteNone);
 
 app.use('/api', router);
 

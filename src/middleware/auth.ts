@@ -3,15 +3,9 @@ import { NextFunction, Request, Response } from 'express';
 import joi from 'joi';
 import { User } from '../models/user.model';
 
-export const validateUserToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const validateUserToken = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) {
-    return res
-      .status(403)
-      .json({ success: false, error: 'Authorization Token is required.' });
+    return res.status(403).json({ success: false, error: 'Authorization Token is required.' });
   }
   const { authorization } = req.headers;
   const schema = joi
