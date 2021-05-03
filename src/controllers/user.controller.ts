@@ -283,42 +283,55 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const editUser = async (req: Request, res: Response) => {
   try {
-    try {
-      const { userName } = req.body;
-      const getReferal = await User.findOne({ referralUrl: userName }).exec();
+    const { userName } = req.body;
+    const getReferal = await User.findOne({ referralUrl: userName }).exec();
 
-      if (getReferal) {
-        return res.status(401).json({
-          error: 'Referal link with that username already exists.',
-          success: false,
-        });
-      }
-
-      let link = `${clientUrl}api/v1/signup?ref=${userName}`;
-
-      await User.findOneAndUpdate(
-        {
-          _id: req.currentUser._id,
-        },
-        {
-          $set: { referralUrl: link, userName: userName },
-        }
-        // {
-        //   new: true,
-        // }
-      );
-
-      return res.status(200).json({
-        data: link,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: error.message,
-        error: 'There was an error. Please try again.',
+    if (getReferal) {
+      return res.status(401).json({
+        error: 'Referal link with that username already exists.',
         success: false,
       });
     }
+
+    let link = `${clientUrl}api/v1/signup?ref=${userName}`;
+
+    await User.findOneAndUpdate(
+      {
+        _id: req.currentUser._id,
+      },
+      {
+        $set: { referralUrl: link, userName: userName },
+      }
+      // {
+      //   new: true,
+      // }
+    );
+
+    return res.status(200).json({
+      data: link,
+    });
   } catch (error) {
-    console.log('err', error);
+    return res.status(500).json({
+      message: error.message,
+      error: 'There was an error. Please try again.',
+      success: false,
+    });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    await User.findOneAndUpdate({ _id: req.currentUser._id });
+    res.clearCookie('jwt-token');
+    return res.status(200).json({
+      status: true,
+      message: 'log out successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      error: 'There was an error. Please try again.',
+      success: false,
+    });
   }
 };

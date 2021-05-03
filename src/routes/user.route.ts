@@ -7,6 +7,7 @@ import {
   getUsers,
   confirmEmail,
   editUser,
+  logout,
 } from './../controllers/user.controller';
 import {
   validateAuthDetails,
@@ -28,5 +29,6 @@ router.post('/users/:id', blockUser);
 // router.get('/users', getUsers);
 router.get('/users', validateUserToken, permit('role.view'), getUsers);
 router.patch('/users', validateUserToken, editUser);
+router.get('/logout', validateUserToken, logout);
 
 export default router;
