@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Profile } from './../models/profile.model';
 import createError from 'http-errors';
+const axios = require('axios');
 
 export const addProfile = async (req: Request, res: Response) => {
   try {
@@ -32,6 +33,18 @@ export const getProfile = async (req: Request, res: Response) => {
       ])
       .exec();
     return res.send(user);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      error: 'There was an error. Please try again.',
+      success: false,
+    });
+  }
+};
+export const getCountries = async (req: Request, res: Response) => {
+  try {
+    let response = await axios.get('https://restcountries.eu/rest/v2/all');
+    res.json(response.data);
   } catch (error) {
     return res.status(500).json({
       message: error.message,
