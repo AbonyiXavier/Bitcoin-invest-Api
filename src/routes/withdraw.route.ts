@@ -1,8 +1,4 @@
-import {
-  withdrawCoin,
-  approveWithdrawal,
-} from './../controllers/withdraw.controller';
-// import { validateProfile } from "./../helpers/validation";
+import { withdrawCoin, approveWithdrawal } from './../controllers/withdraw.controller';
 const router = require('express').Router();
 import { validateUserToken } from './../middleware/auth';
 

@@ -22,6 +22,7 @@ const TransactionSchema: Schema = new Schema(
     txn_type: {
       type: String,
       enum: ['deposit', 'withdraw'],
+      default: 'deposit',
     },
     monthly_rate: { type: Number },
     end_date: { type: Date },
@@ -32,7 +33,4 @@ const TransactionSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export const Transaction = db.model<ITransaction>(
-  'Transaction',
-  TransactionSchema
-);
+export const Transaction = db.model<ITransaction>('Transaction', TransactionSchema);

@@ -21,13 +21,13 @@ import { validateUserToken } from './../middleware/auth';
 import { permit } from './../middleware/permit';
 
 router.post('/signup', validateAuthDetails, signup);
-router.post('/login', validateLoginDetails, validatePassword, login);
+router.post('/login', [validateLoginDetails, validatePassword], login);
 router.post('/changepassword/:id', validateChangePassword, changePassword);
 router.post('/forgetpassword', validateEmail, forgetPassword);
 router.post('/confirm/:token/:email', confirmEmail);
 router.post('/users/:id', blockUser);
 // router.get('/users', getUsers);
-router.get('/users', validateUserToken, permit('role.view'), getUsers);
+router.get('/users', [validateUserToken, permit('role.view')], getUsers);
 router.patch('/users', validateUserToken, editUser);
 router.get('/logout', validateUserToken, logout);
 
