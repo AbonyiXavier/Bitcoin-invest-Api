@@ -281,7 +281,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const editUser = async (req: Request, res: Response) => {
+export const createReferLink = async (req: Request, res: Response) => {
   try {
     const { userName } = req.body;
     const getReferal = await User.findOne({ referralUrl: userName }).exec();
