@@ -45,13 +45,10 @@ export const validateLoginDetails = async (req: Request, res: Response, next: Ne
 export const validateTransaction = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const schema = joi.object().keys({
-      email: joi.string().email().required(),
-      password: joi.string().min(6).required(),
       amount: joi.number().required(),
       approved: joi.boolean(),
       txn_type: joi.string().valid('deposit', 'withdraw').default('deposit'),
-      monthly_rate: joi.number().required(),
-      status: joi.string().required(),
+      plan: joi.string().required(),
     });
     await schema.validateAsync(req.body);
     return next();

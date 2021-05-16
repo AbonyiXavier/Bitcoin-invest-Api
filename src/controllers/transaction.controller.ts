@@ -10,10 +10,10 @@ import { db } from './../Database/connect';
 import { isToday, formatISO } from 'date-fns';
 
 export const createTransaction = async (req: Request, res: Response) => {
-  const session = await db.startSession();
-  session.startTransaction();
+  // const session = await db.startSession();
+  // session.startTransaction();
   try {
-    const opts = { session };
+    // const opts = { session };
 
     const endDate = calculateInvestmentMaturityDate(new Date(), 3); // date the rate will be due, like this one is for 3months
 
@@ -44,7 +44,7 @@ export const createTransaction = async (req: Request, res: Response) => {
 
     const newTransaction = await new Transaction({
       amount: req.body.amount,
-      txn_type: 'deposit',
+      // txn_type: 'deposit',
       end_date: endDate.jsDate,
       plan: req.body.plan,
       monthly_rate: roundMonthlyRate,
@@ -52,10 +52,10 @@ export const createTransaction = async (req: Request, res: Response) => {
       owner: req.currentUser._id,
     });
 
-    await newTransaction.save(opts);
+    await newTransaction.save();
 
-    await session.commitTransaction();
-    session.endSession();
+    // await session.commitTransaction();
+    // session.endSession();
 
     // const options = {
     //   mail: user!.email,
@@ -70,8 +70,8 @@ export const createTransaction = async (req: Request, res: Response) => {
       newTransaction,
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
+    // await session.abortTransaction();
+    // session.endSession();
     return res.status(500).json({
       message: error.message,
       error: 'There was an error. Please try again.',
