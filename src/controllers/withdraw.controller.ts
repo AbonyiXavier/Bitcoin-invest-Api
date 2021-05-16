@@ -30,19 +30,19 @@ export const withdrawCoin = async (req: Request, res: Response) => {
       owner: req.currentUser._id,
     });
     await newWithdraw.save();
-    let message = `withdrawal request of $${newWithdraw!.amount}`;
+    // let message = `withdrawal request of $${newWithdraw!.amount}`;
 
-    const options = {
-      mail: 'francisxavier96@yahoo.com',
-      subject: 'YAY! Withdrawal Request',
-      email: './../services/email/templates/withdraw.html',
-      variables: {
-        heading: 'Withdrawal Request',
-        message: message,
-        name: user!.name,
-      },
-    };
-    Mail(options);
+    // const options = {
+    //   mail: 'francisxavier96@yahoo.com',
+    //   subject: 'YAY! Withdrawal Request',
+    //   email: './../services/email/templates/withdraw.html',
+    //   variables: {
+    //     heading: 'Withdrawal Request',
+    //     message: message,
+    //     name: user!.name,
+    //   },
+    // };
+    // Mail(options);
     return res.send(newWithdraw);
   } catch (error) {
     return res.status(500).json({
@@ -77,9 +77,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
       throw new createError.BadRequest(`Sorry Transaction is already approved`);
     }
     if (!trnx.approved && trnx.approved !== 'pending') {
-      throw new createError.BadRequest(
-        `Sorry Transaction is already blocked/unapproved`
-      );
+      throw new createError.BadRequest(`Sorry Transaction is already blocked/unapproved`);
     }
 
     const trnxSaved = await Withdraw.findOneAndUpdate(
@@ -112,24 +110,24 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
       }
     );
 
-    if (trnxSaved!.approved) {
-      let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
-      let message =
-        'Your withdrawal was Approved, kindly be patient, while your wallet address will be credited shortly';
-      const options = {
-        mail: trnxSaved!.owner.email,
-        subject: 'YAY! Withdrawal approved!',
-        email: './../services/email/templates/notify.html',
-        variables: {
-          name: trnxSaved!.owner.name,
-          heading: 'Withdrawal  APPROVED',
-          message: message,
-          link: link,
-          buttonText: 'SEE MY Transaction',
-        },
-      };
-      await Mail(options);
-    }
+    // if (trnxSaved!.approved) {
+    //   let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
+    //   let message =
+    //     'Your withdrawal was Approved, kindly be patient, while your wallet address will be credited shortly';
+    //   const options = {
+    //     mail: trnxSaved!.owner.email,
+    //     subject: 'YAY! Withdrawal approved!',
+    //     email: './../services/email/templates/notify.html',
+    //     variables: {
+    //       name: trnxSaved!.owner.name,
+    //       heading: 'Withdrawal  APPROVED',
+    //       message: message,
+    //       link: link,
+    //       buttonText: 'SEE MY Transaction',
+    //     },
+    //   };
+    //   await Mail(options);
+    // }
     return res.status(200).send('Withdrawal was approved!');
   } catch (error) {
     return res.status(500).json({
