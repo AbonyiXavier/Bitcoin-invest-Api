@@ -62,7 +62,9 @@ export const validatePassword = async (req: Request, res: Response, next: NextFu
     const { email, password } = req.body;
     const user = await User.findOne({ email }).exec();
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid email/password combination.' });
+      return res
+        .status(401)
+        .json({ success: false, error: 'Wrong Email or Password combination.' });
     }
     if (user.blocked) {
       throw new createError.BadRequest(
