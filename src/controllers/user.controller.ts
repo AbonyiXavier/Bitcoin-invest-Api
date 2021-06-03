@@ -92,7 +92,7 @@ export const login = async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: {
-        data,
+        token,
         user,
       },
     });
