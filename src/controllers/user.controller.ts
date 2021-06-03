@@ -87,8 +87,9 @@ export const login = async (req: Request, res: Response) => {
     const token = await generateJwt({ user });
     return res.json({
       success: true,
-      data: user,
       token: token,
+      name: user!.name,
+      email: user!.email,
     });
   } catch (error) {
     return res.status(500).json({
