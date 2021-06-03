@@ -65,10 +65,13 @@ export const signup = async (req: Request, res: Response) => {
     // };
     // await Mail(options);
     return res.json({
-      message: `Confirm your email on the link sent to ${email}`,
+      message: 'Signup successfully',
       success: true,
-      jwt: token,
-      user: data,
+      token: token,
+      name: data.name,
+      email: data.email,
+      bitcoin_wallet: data.bitcoin_wallet,
+      role: data.role,
     });
   } catch (error) {
     return res.status(500).json({
