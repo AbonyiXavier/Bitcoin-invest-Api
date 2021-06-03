@@ -85,10 +85,14 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email }).exec();
 
     const token = await generateJwt({ user });
-    res.cookie('jwt-token', token);
+    res.cookie('jwt-token', token, {
+      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production',
+    });
     return res.json({
       success: true,
       data: token,
+      user,
     });
   } catch (error) {
     return res.status(500).json({
