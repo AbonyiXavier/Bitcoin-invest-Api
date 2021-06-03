@@ -34,12 +34,12 @@ export const validateLoginDetails = async (req: Request, res: Response, next: Ne
   try {
     const schema = joi.object().keys({
       email: joi.string().email().required(),
-      password: joi.string().min(6).required(),
+      password: joi.string().required(),
     });
     await schema.validateAsync(req.body);
     return next();
   } catch (error) {
-    return res.status(400).json({ success: false, error: error.details[0].message });
+    return res.status(400).json({ success: false, error: 'Wrong Email or Password combination' });
   }
 };
 export const validateTransaction = async (req: Request, res: Response, next: NextFunction) => {
