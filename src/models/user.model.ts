@@ -28,7 +28,7 @@ const UserSchema: Schema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    emailConfirm: { type: Boolean, default: false },
+    emailConfirm: { type: Boolean, default: true },
     blocked: { type: Boolean, default: false },
     wallet_address: { type: String, required: true },
     wallet_balance: { type: Number, required: true, default: 0 },
