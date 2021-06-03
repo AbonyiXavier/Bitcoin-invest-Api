@@ -107,7 +107,7 @@ export const changePassword = async (req: Request, res: Response) => {
     console.log('userEmail', user);
 
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid email/password combination.' });
+      return res.status(401).json({ success: false, error: 'Wrong Email or Password combination' });
     }
     if (user.blocked) {
       throw new createError.BadRequest(

@@ -78,7 +78,7 @@ export const validatePassword = async (req: Request, res: Response, next: NextFu
 
     if (!passwordMatch) {
       return res.status(401).json({
-        error: 'Incorrect email/password combination.',
+        error: 'Wrong Email or Password combination',
         success: false,
       });
     }
