@@ -12,6 +12,6 @@ import { upload } from '../upload-photo/upload';
 router.post('/profile', [validateUserToken, upload.single('image'), validateProfile], addProfile);
 router.get('/profile', validateUserToken, getProfile);
 router.get('/Countries', getCountries);
-router.patch('/editprofile/:id', [upload.single('image'), validateUserToken], editProfile);
+router.patch('/profile/:id', [upload.single('image'), validateUserToken], editProfile);
 
 export default router;

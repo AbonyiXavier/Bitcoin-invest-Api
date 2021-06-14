@@ -11,7 +11,11 @@ export const addProfile = async (req: Request, res: Response) => {
       owner: req.currentUser._id,
     });
     await newProfile.save();
-    return res.send(newProfile);
+    return res.json({
+      message: 'Profile details added successfully',
+      success: true,
+      newProfile,
+    });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -28,11 +32,24 @@ export const getProfile = async (req: Request, res: Response) => {
         {
           path: 'owner',
           model: 'User',
-          select: 'name email _id emailConfirm blocked',
+          select:
+            'name email _id emailConfirm blocked wallet_address wallet_balance referredBy referralUrl userName role',
         },
       ])
       .exec();
-    return res.send(user);
+    return res.json({
+      success: true,
+      name: user.owner.name,
+      email: user.owner.email,
+      emailConfirm: user.owner.emailConfirm,
+      blocked: user.owner.blocked,
+      wallet_address: user.owner.wallet_address,
+      wallet_balance: user.owner.wallet_balance,
+      referredBy: user.owner.referredBy,
+      referralUrl: user.owner.referralUrl,
+      userName: user.owner.userName,
+      role: user.owner.role,
+    });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

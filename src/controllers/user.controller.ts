@@ -93,6 +93,14 @@ export const login = async (req: Request, res: Response) => {
       token: token,
       name: user!.name,
       email: user!.email,
+      emailConfirm: user!.emailConfirm,
+      blocked: user!.blocked,
+      wallet_address: user!.wallet_address,
+      wallet_balance: user!.wallet_balance,
+      referredBy: user!.referredBy,
+      referralUrl: user!.referralUrl,
+      userName: user!.userName,
+      role: user!.role,
     });
   } catch (error) {
     return res.status(500).json({
