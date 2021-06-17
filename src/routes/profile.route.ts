@@ -7,7 +7,7 @@ import {
 import { validateProfile } from './../helpers/validation';
 const router = require('express').Router();
 import { validateUserToken } from './../middleware/auth';
-import { upload } from '../upload-photo/upload';
+import { upload } from '../middleware/upload';
 
 router.post('/profile', [validateUserToken, upload.single('image'), validateProfile], addProfile);
 router.get('/profile', validateUserToken, getProfile);

@@ -20,6 +20,8 @@ export interface IUser extends Document {
   referredBy: string;
   referralUrl: string;
   userName: string;
+  image: string;
+  phoneNumber: string;
   role: IRole['_id'];
 }
 
@@ -35,6 +37,8 @@ const UserSchema: Schema = new Schema(
     referredBy: { type: String, default: null },
     referralUrl: { type: String },
     userName: { type: String },
+    image: { type: String },
+    phoneNumber: { type: String },
     role: { type: Schema.Types.ObjectId },
   },
   { timestamps: true }

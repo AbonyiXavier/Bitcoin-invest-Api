@@ -5,7 +5,7 @@ import { generateJwt, passwordCompare, verifyToken } from './../helpers/auth.ser
 import { Mail } from './../helpers/mailer';
 import { clientUrl } from './../config/client';
 import createError from 'http-errors';
-import { Referal } from './../models/referal.model';
+import { Profile } from './../models/profile.model';
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -116,7 +116,6 @@ export const changePassword = async (req: Request, res: Response) => {
     const { oldPassword, newPassword } = req.body;
     let { id } = req.params;
     const user = await User.findOne({ _id: id }).exec();
-    console.log('userEmail', user);
 
     if (!user) {
       return res.status(401).json({ success: false, error: 'Wrong Email or Password combination' });
@@ -314,13 +313,51 @@ export const createReferLink = async (req: Request, res: Response) => {
       {
         $set: { referralUrl: link, userName: userName },
       }
-      // {
-      //   new: true,
-      // }
     );
 
     return res.status(200).json({
       data: link,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      error: 'There was an error. Please try again.',
+      success: false,
+    });
+  }
+};
+
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    const profile = await new User({
+      image: req.file.filename,
+      phoneNumber: req.body.phoneNumber,
+    });
+
+    const value = await User.findOneAndUpdate(
+      {
+        _id: req.currentUser._id,
+      },
+      {
+        $set: { image: profile.image, phoneNumber: profile.phoneNumber },
+      }
+    );
+
+    return res.status(200).json({
+      message: 'Profile updated succesfully!!',
+      success: true,
+      name: value!.name,
+      email: value!.email,
+      emailConfirm: value!.emailConfirm,
+      blocked: value!.blocked,
+      wallet_address: value!.wallet_address,
+      wallet_balance: value!.wallet_balance,
+      referredBy: value!.referredBy,
+      referralUrl: value!.referralUrl,
+      userName: value!.userName,
+      image: value!.image,
+      phoneNumber: value!.phoneNumber,
+      role: value!.role,
     });
   } catch (error) {
     return res.status(500).json({

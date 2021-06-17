@@ -37,23 +37,29 @@ export const getProfile = async (req: Request, res: Response) => {
         },
       ])
       .exec();
-    console.log('owner', user);
-
+    console.log(user);
     return res.json({
       success: true,
-      // name: user.owner.name,
-      // email: user.owner.email,
-      // emailConfirm: user.owner.emailConfirm,
-      // blocked: user.owner.blocked,
-      // wallet_address: user.owner.wallet_address,
-      // wallet_balance: user.owner.wallet_balance,
-      // referredBy: user.owner.referredBy,
-      // referralUrl: user.owner.referralUrl,
-      // userName: user.owner.userName,
-      // role: user.owner.role,
+      user,
     });
+
+    // return res.json({
+    //   success: true,
+    //   phone: i.phoneNumber,
+    //   image: item.image,
+    //   name: item.owner.name,
+    //   email: item.owner.email,
+    //   emailConfirm: item.owner.emailConfirm,
+    //   blocked: item.owner.blocked,
+    //   wallet_address: item.owner.wallet_address,
+    //   wallet_balance: item.owner.wallet_balance,
+    //   referredBy: item.owner.referredBy,
+    //   referralUrl: item.owner.referralUrl,
+    //   userName: item.owner.userName,
+    //   role: item.owner.role,
+    // });
   } catch (error) {
-    return res.status(500).json({
+    res.status(500).json({
       message: error.message,
       error: 'There was an error. Please try again.',
       success: false,
