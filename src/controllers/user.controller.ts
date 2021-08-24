@@ -36,6 +36,7 @@ export const signup = async (req: Request, res: Response) => {
       referredBy: ref,
       role: role!._id,
     });
+    
     if (confirm_password !== password) {
       return res.status(400).json({
         error: 'password do not match.',
