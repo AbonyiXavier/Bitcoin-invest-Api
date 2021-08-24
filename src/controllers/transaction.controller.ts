@@ -61,7 +61,7 @@ export const createTransaction = async (req: Request, res: Response) => {
       mail: user!.email,
       me: 'francisxavier96@yahoo.com',
       subject: "Welcome to Bitcoin Store!, Deposit to account",
-      email: "../services/email/templates/deposit.html",
+      email: "../email/deposit.html",
       variables: { name: user!.name, },
     };
     Mail(options);

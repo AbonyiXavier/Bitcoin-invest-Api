@@ -159,7 +159,7 @@ export const changePassword = async (req: Request, res: Response) => {
       mail: email,
       me: 'francisxavier96@yahoo.com',
       subject: 'Welcome to Bitcoin Store!, Your new password details',
-      email: '../services/email/templates/changePassword.html',
+      email: '../email/changePassword.html',
       variables: { name: name, email: email, newPassword: newPassword },
     };
     await Mail(options);
@@ -187,7 +187,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
         mail: email,
         me: 'francisxavier96@yahoo.com',
         subject: 'Password Reset - Bitcoin Store',
-        email: '../services/email/templates/emailForUserNotFound.html',
+        email: '../email/emailForUserNotFound.html',
         variables: { link: link },
       };
       await Mail(options);
@@ -215,7 +215,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
       mail: email,
       me: 'francisxavier96@yahoo.com',
       subject: 'Password reset - Bitcoin Store',
-      email: '../services/email/templates/forgotPassword.html',
+      email: '../email/forgotPassword.html',
       variables: { name: user.name, link: link },
     };
     await Mail(options);

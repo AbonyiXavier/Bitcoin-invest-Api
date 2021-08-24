@@ -32,17 +32,18 @@ export const withdrawCoin = async (req: Request, res: Response) => {
     await newWithdraw.save();
     let message = `withdrawal request of $${newWithdraw!.amount}`;
 
-    // const options = {
-    //   mail: 'francisxavier96@yahoo.com',
-    //   subject: 'YAY! Withdrawal Request',
-    //   email: './../services/email/templates/withdraw.html',
-    //   variables: {
-    //     heading: 'Withdrawal Request',
-    //     message: message,
-    //     name: user!.name,
-    //   },
-    // };
-    // Mail(options);
+    const options = {
+      mail: 'francisxavier96@yahoo.com',
+      me: 'francisxavier96@yahoo.com',
+      subject: 'YAY! Withdrawal Request',
+      email: '../email/withdraw.html',
+      variables: {
+        heading: 'Withdrawal Request',
+        message: message,
+        name: user!.name,
+      },
+    };
+    Mail(options);
     return res.send(newWithdraw);
   } catch (error) {
     return res.status(500).json({
