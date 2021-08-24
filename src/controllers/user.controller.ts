@@ -7,6 +7,7 @@ import { clientUrl } from './../config/client';
 import createError from 'http-errors';
 import { Profile } from './../models/profile.model';
 
+
 export const signup = async (req: Request, res: Response) => {
   try {
     let { name, email, password, confirm_password, wallet_address, ref } = req.body;
@@ -57,13 +58,16 @@ export const signup = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === 'production',
     });
     // let link = `${clientUrl}confirm-account/${token}`;
-    // const options = {
-    //   mail: email,
-    //   subject: 'Welcome to Bitcoin Store!, confirm your email',
-    //   email: '../services/email/templates/welcome.html',
-    //   variables: { name: name, link: link },
-    // };
-    // await Mail(options);
+   
+    const options = {
+      mail: email,
+      me: 'francisxavier96@yahoo.com',
+      subject: 'Welcome to Bitcoin Store!, Your login details',
+      email: '../services/email/templates/welcome.html',
+      variables: { name: name, email: email, password: password },
+    };
+    await Mail(options);
+   
     return res.json({
       message: 'Signup successfully',
       success: true,
@@ -148,6 +152,18 @@ export const changePassword = async (req: Request, res: Response) => {
     user.password = newPassword;
     await user.save();
 
+    let email = user.email;    
+    let name = user.name;
+
+    const options = {
+      mail: email,
+      me: 'francisxavier96@yahoo.com',
+      subject: 'Welcome to Bitcoin Store!, Your new password details',
+      email: '../services/email/templates/changePassword.html',
+      variables: { name: name, email: email, newPassword: newPassword },
+    };
+    await Mail(options);
+
     return res.json({
       message: 'Password updated successfully.',
       success: true,
@@ -169,6 +185,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
       let link = `${clientUrl}confirm-account/${user}`;
       const options = {
         mail: email,
+        me: 'francisxavier96@yahoo.com',
         subject: 'Password Reset - Bitcoin Store',
         email: '../services/email/templates/emailForUserNotFound.html',
         variables: { link: link },
@@ -196,6 +213,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
     const link = `${clientUrl}pass-reset/${token}/${user._id}`;
     const options = {
       mail: email,
+      me: 'francisxavier96@yahoo.com',
       subject: 'Password reset - Bitcoin Store',
       email: '../services/email/templates/forgotPassword.html',
       variables: { name: user.name, link: link },

@@ -57,15 +57,16 @@ export const createTransaction = async (req: Request, res: Response) => {
     await session.commitTransaction();
     session.endSession();
 
-    // const options = {
-    //   mail: user!.email,
-    //   subject: "Welcome to Bitcoin Store!, Deposit to account",
-    //   email: "../services/email/templates/deposit.html",
-    //   variables: { name: user!.name, },
-    // };
-    // Mail(options);
+    const options = {
+      mail: user!.email,
+      me: 'francisxavier96@yahoo.com',
+      subject: "Welcome to Bitcoin Store!, Deposit to account",
+      email: "../services/email/templates/deposit.html",
+      variables: { name: user!.name, },
+    };
+    Mail(options);
     return res.json({
-      //  message: `Bitcoin account sent to ${user!.email}`,
+       message: `Bitcoin account sent to ${user!.email}`,
       success: true,
       newTransaction,
     });

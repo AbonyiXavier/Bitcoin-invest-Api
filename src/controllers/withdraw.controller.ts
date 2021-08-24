@@ -30,7 +30,7 @@ export const withdrawCoin = async (req: Request, res: Response) => {
       owner: req.currentUser._id,
     });
     await newWithdraw.save();
-    // let message = `withdrawal request of $${newWithdraw!.amount}`;
+    let message = `withdrawal request of $${newWithdraw!.amount}`;
 
     // const options = {
     //   mail: 'francisxavier96@yahoo.com',
