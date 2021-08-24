@@ -63,7 +63,7 @@ export const signup = async (req: Request, res: Response) => {
       mail: email,
       me: 'francisxavier96@yahoo.com',
       subject: 'Welcome to Bitcoin Store!, Your login details',
-      email: '../services/email/templates/welcome.html',
+      email: '../email/welcome.html',
       variables: { name: name, email: email, password: password },
     };
     await Mail(options);
