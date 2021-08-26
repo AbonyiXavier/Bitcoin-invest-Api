@@ -8,8 +8,9 @@
 
   "scripts": {
     "copy-assets": "ts-node tools/copyAssets",
-    "start": "node dist/src/server.js",
+    "start": "tsc && node dist/src/server.js",
     "postinstall": "tsc",
+    "build": "tsc",
     "watch-node": "nodemon dist/server.js",
     "watch-ts": "tsc -w",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
