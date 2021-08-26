@@ -9,7 +9,7 @@
   "scripts": {
     "copy-assets": "ts-node tools/copyAssets",
     "build": "npm run tsc copy-assets",
-    "start": "npm run build && node ./dist/server.js",
+    "start": "node dist/server.js && npm run build",
     "postinstall": "tsc",
     "watch-node": "nodemon dist/server.js",
     "watch-ts": "tsc -w",
