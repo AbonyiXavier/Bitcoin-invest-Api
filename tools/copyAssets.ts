@@ -1,4 +1,4 @@
-// import * as shell from "shelljs";
+import * as shell from "shelljs";
 
-// // Copy all the view templates
-// shell.cp( "-R", "src/email", "dist/src" );
+// Copy all the view templates
+shell.cp( "-R", "src/email", "dist" );
