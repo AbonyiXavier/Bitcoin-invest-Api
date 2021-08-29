@@ -1,22 +1,23 @@
 {
-    "compilerOptions": {
-      "target": "es2017",
-      "module": "commonjs",
-      // "rootDir": "./",
-      "outDir": "dist",
-      "esModuleInterop": true,
-      "strict": true,
-      "typeRoots": ["./node_modules/@types", "./src/@types"],
-      // "typeRoots": ["./node_modules/@types", "src/definition"],
-      "skipLibCheck": true
-    },
-    "include": [
-      "src/**/*"
-, "tools"     ],
-    "exclude": [
-      "node_modules"
-    ]
-  }
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    // "rootDir": "./",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "strict": true,
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    // "typeRoots": ["./node_modules/@types", "src/definition"],
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*"
+   ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+
 // {
 //   "compilerOptions": {
 //   "module": "commonjs",
