@@ -4,17 +4,14 @@
   "description": "Node-typescript API",
   "main": "dist/server.js",
 
-
-
   "scripts": {
-    "copy-assets": "ts-node tools/copyAssets",
-    "start": "tsc && node dist/src/server.js",
-    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "tsc",
     "watch-node": "nodemon dist/server.js",
     "watch-ts": "tsc -w",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "start:dev": "nodemon --exec ts-node -T src/server.ts"
+    "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
+  
 
   "author": "AbonyiXavier <francisabonyi@gmail.com>",
   "license": "ISC",
