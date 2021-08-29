@@ -40,7 +40,7 @@ const job = new CronJob(
 job.start();
 
 // app.use('/uploads', express.static('uploads'));
-app.use(express.static(__dirname + '/email'));
+// app.use(express.static(__dirname + '/email'));
 
 
 app.get('/', (req: Request, res: Response) => {
