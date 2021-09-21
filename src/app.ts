@@ -7,7 +7,6 @@ import router from './routes';
 import { checkInvestmentAndClose } from './controllers/transaction.controller';
 import { CronJob } from 'cron';
 const { shouldSendSameSiteNone } = require('should-send-same-site-none');
-import * as shell from "shelljs";
 
 
 require('./Database/connect');
@@ -42,9 +41,8 @@ const job = new CronJob(
 job.start();
 
 // app.use('/uploads', express.static('uploads'));
-// app.use(express.static(__dirname + '/email'));
+app.use(express.static(__dirname + '/email'));
 
-shell.cp( "-R", "email", "dist/" );
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({

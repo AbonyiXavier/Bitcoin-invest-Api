@@ -5,7 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
+    "clean": "rimraf dist/*",
+    "copy-assets": "ts-node tools/copyAssets",
     "postinstall": "tsc",
+    "build": "npm run clean && npm run postinstall && npm run copy-assets",
     "watch-node": "nodemon dist/server.js",
     "watch-ts": "tsc -w",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
