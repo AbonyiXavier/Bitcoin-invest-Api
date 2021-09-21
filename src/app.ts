@@ -7,6 +7,8 @@ import router from './routes';
 import { checkInvestmentAndClose } from './controllers/transaction.controller';
 import { CronJob } from 'cron';
 const { shouldSendSameSiteNone } = require('should-send-same-site-none');
+const path = require('path');
+
 
 require('./Database/connect');
 
@@ -43,7 +45,11 @@ job.start();
 // app.use(express.static(__dirname + '/email'));
 
 
+app.use(express.static(__dirname + '/dist/email'));
+
 app.get('/', (req: Request, res: Response) => {
+  const fullPath = path.join(__dirname + '/dist/email/welcome.html');
+  console.log(" Fetching from.." + fullPath);
   res.status(200).json({
     status: 'success',
     message: 'Welcome to My Bitcoin App',
