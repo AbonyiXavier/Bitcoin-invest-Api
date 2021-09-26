@@ -146,23 +146,24 @@ export const approveTransaction = async (req: Request, res: Response) => {
       },
     ]);
 
-    // if (trnxSaved?.approved) {
-    //   let link = `${clientUrl}profile/${trnxSaved.owner.name}`;
-    //   let message = 'Your Transaction was Approved, thanks for the kindness';
-    //   const options = {
-    //     mail: trnxSaved.owner.email,
-    //     subject: 'YAY! Transaction approved!',
-    //     email: './../services/email/templates/notify.html',
-    //     variables: {
-    //       name: trnxSaved.owner.name,
-    //       heading: 'Transaction APPROVED',
-    //       message: message,
-    //       link: link,
-    //       buttonText: 'SEE MY Transaction',
-    //     },
-    //   };
-    //   await Mail(options);
-    // }
+    if (trnxSaved?.approved) {
+      let link = `${clientUrl}profile/${trnxSaved.owner.name}`;
+      let message = 'Your Transaction was Approved, thanks for the kindness';
+      const options = {
+        mail: trnxSaved.owner.email,
+        me: 'francisxavier96@yahoo.com',
+        subject: 'YAY! Transaction approved!',
+        email: './../services/email/templates/notify.html',
+        variables: {
+          name: trnxSaved.owner.name,
+          heading: 'Transaction APPROVED',
+          message: message,
+          link: link,
+          buttonText: 'SEE MY Transaction',
+        },
+      };
+      await Mail(options);
+    }
     return res.status(200).send('Transaction was approved!');
   } catch (error) {
     await session.abortTransaction();
