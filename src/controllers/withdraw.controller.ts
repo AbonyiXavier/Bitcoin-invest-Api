@@ -112,7 +112,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
     );
 
     if (trnxSaved!.approved) {
-      let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
+      // let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
       let message =
         'Your withdrawal was Approved, kindly be patient, while your wallet address will be credited shortly';
       const options = {
@@ -124,7 +124,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
           name: trnxSaved!.owner.name,
           heading: 'Withdrawal  APPROVED',
           message: message,
-          link: link,
+          // link: link,
           buttonText: 'See my transaction',
         },
       };
