@@ -153,7 +153,7 @@ export const approveTransaction = async (req: Request, res: Response) => {
         mail: trnxSaved.owner.email,
         me: 'francisxavier96@yahoo.com',
         subject: 'YAY! Transaction approved!',
-        email: './../services/email/templates/notify.html',
+        email: '../email/notify.html',
         variables: {
           name: trnxSaved.owner.name,
           heading: 'Transaction APPROVED',

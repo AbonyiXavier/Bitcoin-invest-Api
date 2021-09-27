@@ -119,7 +119,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
         mail: trnxSaved!.owner.email,
         me: 'francisxavier96@yahoo.com',
         subject: 'YAY! Withdrawal approved!',
-        email: './../services/email/templates/notify.html',
+        email: '../email/notify.html',
         variables: {
           name: trnxSaved!.owner.name,
           heading: 'Withdrawal  APPROVED',
