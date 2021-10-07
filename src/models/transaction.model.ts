@@ -13,22 +13,20 @@ export interface ITransaction extends Document {
   status: string;
   owner: IUser['_id'];
   plan: IPlan['_id'];
+  created_At: Date
 }
 
 const TransactionSchema: Schema = new Schema(
   {
     amount: { type: Number, required: true, default: 0 },
     approved: { type: Boolean, default: null },
-    txn_type: {
-      type: String,
-      enum: ['deposit', 'withdraw'],
-      default: 'deposit',
-    },
+    txn_type: { type: String },
     monthly_rate: { type: Number },
     end_date: { type: Date },
     status: { type: String },
     owner: { type: Schema.Types.ObjectId, required: true },
     plan: { type: Schema.Types.ObjectId, required: true },
+    created_At: { type: Date, default: Date.now  },
   },
   { timestamps: true }
 );

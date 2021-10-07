@@ -8,6 +8,8 @@ import { clientUrl } from './../config/client';
 import { calculateInvestmentMaturityDate } from './../helpers/auth.service';
 import { db } from './../Database/connect';
 import { isToday, formatISO } from 'date-fns';
+import { ReceiptMail } from './../helpers/receiptMailer';
+import { createPdfFile } from './../helpers/createPDF';
 
 export const createTransaction = async (req: Request, res: Response) => {
   const session = await db.startSession();
@@ -44,7 +46,7 @@ export const createTransaction = async (req: Request, res: Response) => {
 
     const newTransaction = await new Transaction({
       amount: req.body.amount,
-      // txn_type: 'deposit',
+      txn_type: 'deposit',
       end_date: endDate.jsDate,
       plan: req.body.plan,
       monthly_rate: roundMonthlyRate,
@@ -52,14 +54,45 @@ export const createTransaction = async (req: Request, res: Response) => {
       owner: req.currentUser._id,
     });
 
-    await newTransaction.save();
+   await newTransaction.save();
+   
 
     await session.commitTransaction();
     session.endSession();
 
+    // const variableData = {
+    //   full_name: user!.name,
+    //   total_amount: newTransaction.amount,
+    //   txn_type: newTransaction.txn_type,
+    //   createdAt: newTransaction.created_At,
+    // };
+
+    // const filename = `${newTransaction._id}`;
+
+    // await createPdfFile(filename, variableData);
+
+    // const options = {
+    //   mail: user!.email,
+    //   subject: 'Transaction Receipt file',
+    //   variables: {
+    //     name: user!.name,
+    //   },
+    //   email: '../email/receiptMail.html',
+    //   attachment: filename,
+    //   filename: filename,
+    // };
+
+    // setTimeout(async () => {
+    //   await ReceiptMail(options);
+    //   return res.status(200).send({
+    //     message: `check ${user!.email} for receipt`,
+    //     success: true,
+    //     newTransaction,
+    //  });
+    // }, 60000)
     const options = {
       mail: user!.email,
-      me: 'francisxavier96@yahoo.com',
+      me: 'admin@alexawealthmngt.com',
       subject: "Welcome to Bitcoin Store!, Deposit to account",
       email: "../email/deposit.html",
       variables: { name: user!.name, },
@@ -147,24 +180,54 @@ export const approveTransaction = async (req: Request, res: Response) => {
     ]);
 
     if (trnxSaved?.approved) {
-      // let link = `${clientUrl}profile/${trnxSaved.owner.name}`;
-      let message = 'Your Transaction was Approved, thanks for the kindness';
+
+      const variableData = {
+        full_name: trnxSaved.owner.name,
+        total_amount: trnxSaved.owner.amount,
+        txn_type: 'deposit',
+        createdAt: new Date(),
+      };
+  
+      const filename = `${trnx.owner._id}`;
+  
+      await createPdfFile(filename, variableData);
+  
       const options = {
         mail: trnxSaved.owner.email,
-        me: 'francisxavier96@yahoo.com',
-        subject: 'YAY! Transaction approved!',
-        email: '../email/notify.html',
+        subject: 'Transaction Receipt file',
         variables: {
           name: trnxSaved.owner.name,
-          heading: 'Transaction APPROVED',
-          message: message,
-          // link: link,
-          buttonText: 'SEE MY Transaction',
         },
+        email: '../email/receiptMail.html',
+        attachment: filename,
+        filename: filename,
       };
-      await Mail(options);
+  
+      setTimeout(async () => {
+        await ReceiptMail(options);
+       return res.status(200).send({
+          message: "Your Transaction was Approved, thanks for the kindness",
+          success: true,
+       });
+      }, 60000)
+      // let link = `${clientUrl}profile/${trnxSaved.owner.name}`;
+      // let message = 'Your Transaction was Approved, thanks for the kindness';
+      // const options = {
+      //   mail: trnxSaved.owner.email,
+      //   me: 'admin@alexawealthmngt.com',
+      //   subject: 'YAY! Transaction approved!',
+      //   email: '../email/notify.html',
+      //   variables: {
+      //     name: trnxSaved.owner.name,
+      //     heading: 'Transaction APPROVED',
+      //     message: message,
+      //     // link: link,
+      //     buttonText: 'SEE MY Transaction',
+      //   },
+      // };
+      // await Mail(options);
     }
-    return res.status(200).send('Transaction was approved!');
+    // return res.status(200).send('Transaction was approved!');
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

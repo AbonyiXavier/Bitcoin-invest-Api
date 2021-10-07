@@ -4,6 +4,8 @@ import { User } from './../models/user.model';
 import createError from 'http-errors';
 import { Mail } from './../helpers/mailer';
 import { clientUrl } from './../config/client';
+import { ReceiptMail } from './../helpers/receiptMailer';
+import { createPdfFile } from './../helpers/createPDF';
 
 export const withdrawCoin = async (req: Request, res: Response) => {
   try {
@@ -34,7 +36,7 @@ export const withdrawCoin = async (req: Request, res: Response) => {
 
     const options = {
       mail: user?.email,
-      me: 'francisxavier96@yahoo.com',
+      me: 'admin@alexawealthmngt.com',
       subject: 'YAY! Withdrawal Request',
       email: '../email/withdraw.html',
       variables: {
@@ -112,25 +114,54 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
     );
 
     if (trnxSaved!.approved) {
-      // let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
-      let message =
-        'Your withdrawal was Approved, kindly be patient, while your wallet address will be credited shortly';
+      const variableData = {
+        full_name: trnxSaved!.owner.name,
+        total_amount: trnxSaved!.owner.amount,
+        txn_type: 'withdraw',
+        createdAt: new Date(),
+      };
+  
+      const filename = `${trnx.owner._id}`;
+  
+      await createPdfFile(filename, variableData);
+  
       const options = {
         mail: trnxSaved!.owner.email,
-        me: 'francisxavier96@yahoo.com',
-        subject: 'YAY! Withdrawal approved!',
-        email: '../email/notify.html',
+        subject: 'Transaction Receipt file',
         variables: {
           name: trnxSaved!.owner.name,
-          heading: 'Withdrawal  APPROVED',
-          message: message,
-          // link: link,
-          buttonText: 'See my transaction',
         },
+        email: '../email/receiptMail.html',
+        attachment: filename,
+        filename: filename,
       };
-      await Mail(options);
+  
+      setTimeout(async () => {
+        await ReceiptMail(options);
+       return res.status(200).send({
+          message: "Withdrawal was approved!",
+          success: true,
+       });
+      }, 60000)
+      // let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
+      // let message =
+      //   'Your withdrawal was Approved, kindly be patient, while your wallet address will be credited shortly';
+      // const options = {
+      //   mail: trnxSaved!.owner.email,
+      //   me: 'admin@alexawealthmngt.com',
+      //   subject: 'YAY! Withdrawal approved!',
+      //   email: '../email/notify.html',
+      //   variables: {
+      //     name: trnxSaved!.owner.name,
+      //     heading: 'Withdrawal  APPROVED',
+      //     message: message,
+      //     // link: link,
+      //     buttonText: 'See my transaction',
+      //   },
+      // };
+      // await Mail(options);
     }
-    return res.status(200).send('Withdrawal was approved!');
+    // return res.status(200).send('Withdrawal was approved!');
   } catch (error) {
     return res.status(500).json({
       message: error.message,

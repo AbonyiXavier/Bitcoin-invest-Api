@@ -62,7 +62,7 @@ export const signup = async (req: Request, res: Response) => {
    
     const options = {
       mail: email,
-      me: 'francisxavier96@yahoo.com',
+      me: 'admin@alexawealthmngt.com',
       subject: 'Welcome to Bitcoin Store!, Your login details',
       email: '../email/welcome.html',
       variables: { name: name, email: email, password: password },
@@ -90,7 +90,7 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email }).exec();
+    const user = await User.findOne({ email }).exec();    
 
     const token = await generateJwt({ user });
     return res.json({
@@ -158,7 +158,7 @@ export const changePassword = async (req: Request, res: Response) => {
 
     const options = {
       mail: email,
-      me: 'francisxavier96@yahoo.com',
+      me: 'admin@alexawealthmngt.com',
       subject: 'Welcome to Bitcoin Store!, Your new password details',
       email: '../email/changePassword.html',
       variables: { name: name, email: email, newPassword: newPassword },
@@ -186,7 +186,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
       let link = `${clientUrl}confirm-account/${user}`;
       const options = {
         mail: email,
-        me: 'francisxavier96@yahoo.com',
+        me: 'admin@alexawealthmngt.com',
         subject: 'Password Reset - Bitcoin Store',
         email: '../email/emailForUserNotFound.html',
         variables: { link: link },
@@ -214,7 +214,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
     const link = `${clientUrl}pass-reset/${token}/${user._id}`;
     const options = {
       mail: email,
-      me: 'francisxavier96@yahoo.com',
+      me: 'admin@alexawealthmngt.com',
       subject: 'Password reset - Bitcoin Store',
       email: '../email/forgotPassword.html',
       variables: { name: user.name, link: link },
