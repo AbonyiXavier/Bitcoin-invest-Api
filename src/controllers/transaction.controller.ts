@@ -183,7 +183,7 @@ export const approveTransaction = async (req: Request, res: Response) => {
 
       const variableData = {
         full_name: trnxSaved.owner.name,
-        total_amount: trnxSaved.owner.amount,
+        total_amount: trnx.amount,
         txn_type: 'deposit',
         createdAt: new Date(),
       };

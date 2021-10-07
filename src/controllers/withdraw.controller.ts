@@ -116,7 +116,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
     if (trnxSaved!.approved) {
       const variableData = {
         full_name: trnxSaved!.owner.name,
-        total_amount: trnxSaved!.owner.amount,
+        total_amount: trnx.amount,
         txn_type: 'withdraw',
         createdAt: new Date(),
       };
