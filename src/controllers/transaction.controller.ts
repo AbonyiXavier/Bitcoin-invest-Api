@@ -205,10 +205,6 @@ export const approveTransaction = async (req: Request, res: Response) => {
   
       setTimeout(async () => {
         await ReceiptMail(options);
-       return res.status(200).send({
-          message: "Your Transaction was Approved, thanks for the kindness",
-          success: true,
-       });
       }, 60000)
       // let link = `${clientUrl}profile/${trnxSaved.owner.name}`;
       // let message = 'Your Transaction was Approved, thanks for the kindness';
@@ -227,7 +223,7 @@ export const approveTransaction = async (req: Request, res: Response) => {
       // };
       // await Mail(options);
     }
-    // return res.status(200).send('Transaction was approved!');
+    return res.status(200).send('Transaction was approved!');
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

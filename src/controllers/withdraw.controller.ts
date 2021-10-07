@@ -138,10 +138,6 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
   
       setTimeout(async () => {
         await ReceiptMail(options);
-       return res.status(200).send({
-          message: "Withdrawal was approved!",
-          success: true,
-       });
       }, 60000)
       // let link = `${clientUrl}withdraw/${trnxSaved!.owner.name}`;
       // let message =
@@ -161,7 +157,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
       // };
       // await Mail(options);
     }
-    // return res.status(200).send('Withdrawal was approved!');
+    return res.status(200).send('Withdrawal was approved!');
   } catch (error) {
     return res.status(500).json({
       message: error.message,
