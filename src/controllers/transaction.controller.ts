@@ -92,7 +92,7 @@ export const createTransaction = async (req: Request, res: Response) => {
     // }, 60000)
     const options = {
       mail: user!.email,
-      me: 'admin@alexawealthmngt.com',
+      me: 'support@alexawealthmngt.com',
       subject: "Welcome to Bitcoin Store!, Deposit to account",
       email: "../email/deposit.html",
       variables: { name: user!.name, },
@@ -210,7 +210,7 @@ export const approveTransaction = async (req: Request, res: Response) => {
       // let message = 'Your Transaction was Approved, thanks for the kindness';
       // const options = {
       //   mail: trnxSaved.owner.email,
-      //   me: 'admin@alexawealthmngt.com',
+      //   me: 'support@alexawealthmngt.com',
       //   subject: 'YAY! Transaction approved!',
       //   email: '../email/notify.html',
       //   variables: {

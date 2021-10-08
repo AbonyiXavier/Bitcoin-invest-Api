@@ -36,7 +36,7 @@ export const withdrawCoin = async (req: Request, res: Response) => {
 
     const options = {
       mail: user?.email,
-      me: 'admin@alexawealthmngt.com',
+      me: 'support@alexawealthmngt.com',
       subject: 'YAY! Withdrawal Request',
       email: '../email/withdraw.html',
       variables: {
@@ -144,7 +144,7 @@ export const approveWithdrawal = async (req: Request, res: Response) => {
       //   'Your withdrawal was Approved, kindly be patient, while your wallet address will be credited shortly';
       // const options = {
       //   mail: trnxSaved!.owner.email,
-      //   me: 'admin@alexawealthmngt.com',
+      //   me: 'support@alexawealthmngt.com',
       //   subject: 'YAY! Withdrawal approved!',
       //   email: '../email/notify.html',
       //   variables: {

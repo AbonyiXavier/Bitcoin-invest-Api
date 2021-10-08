@@ -24,7 +24,7 @@ export const createReceipt = async (req: Request, res: Response) => {
     await createPdfFile(filename, variableData);
 
     const options = {
-      mail: 'admin@alexawealthmngt.com',
+      mail: 'support@alexawealthmngt.com',
       subject: 'Transaction Receipt file',
       variables: {
         name: receipt.full_name,
