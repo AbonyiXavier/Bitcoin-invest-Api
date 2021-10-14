@@ -1,1 +1,1 @@
-# Investment platform(Bitcoin-Store)
+# Investment platform
